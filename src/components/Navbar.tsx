@@ -1,20 +1,64 @@
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
-
-const links = [['Product', '#product'], ['Features', '#features'], ['Architecture', '#architecture'], ['CLI', '#cli'], ['Docs', '#docs']]
+import { navLinks } from '../data/got'
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
-  return <header className="fixed inset-x-4 top-4 z-50 mx-auto max-w-7xl rounded-2xl border border-white/10 bg-black/45 text-white shadow-2xl backdrop-blur-xl sm:top-6">
-    <div className="mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
-      <a href="#" className="flex items-center gap-3 text-white" aria-label="GOT home">
-        <span className="relative grid size-10 place-items-center overflow-hidden rounded-xl bg-brand font-black text-white"><span className="absolute inset-0 bg-gradient-to-br from-cyan-300/40 to-transparent"/>G<span className="text-cyan-200">›</span></span>
-        <span><b className="block text-lg leading-5 tracking-tight">GOT<span className="text-cyan-400">_</span></b><span className="text-xs text-slate-400">Go Templatify</span></span>
-      </a>
-      <nav className="hidden items-center gap-8 md:flex">{links.map(([label, href]) => <a className="text-sm font-medium text-slate-400 transition hover:text-white" href={href} key={label}>{label}</a>)}</nav>
-      <div className="hidden items-center gap-3 md:flex"><a href="#docs" className="px-3 py-2 text-sm font-semibold text-slate-300">GitHub</a><a href="#download" className="rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-ink transition hover:bg-cyan-100">Download ↗</a></div>
-      <button className="rounded-lg p-2 text-white md:hidden" onClick={() => setOpen(!open)} aria-label="Toggle navigation" aria-expanded={open}>{open ? <X /> : <Menu />}</button>
-    </div>
-    {open && <nav className="border-t border-white/10 bg-black/70 px-5 py-4 backdrop-blur-xl md:hidden">{links.map(([label, href]) => <a onClick={() => setOpen(false)} className="block rounded-lg px-3 py-3 font-medium text-slate-300 hover:bg-white/5" href={href} key={label}>{label}</a>)}<a href="#download" className="mt-2 block rounded-xl bg-brand px-5 py-3 text-center font-bold text-white">Download</a></nav>}
-  </header>
+
+  return (
+    <header className="fixed inset-x-4 top-4 z-50 mx-auto max-w-7xl rounded-2xl border border-slate-200/80 bg-white/80 shadow-[0_10px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl sm:top-6">
+      <div className="mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
+        <a href="#top" className="flex items-center gap-3" aria-label="GOT home">
+          <span className="brand-mark text-[1.1rem]">
+            G<span className="text-sky-600">&gt;_</span>
+          </span>
+          <span className="text-lg font-black tracking-[-0.06em] text-slate-950">GOT</span>
+        </a>
+
+        <nav className="hidden items-center gap-8 md:flex">
+          {navLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="text-sm font-medium text-slate-600 hover:text-slate-950"
+              target={link.href.startsWith('http') ? '_blank' : undefined}
+              rel={link.href.startsWith('http') ? 'noreferrer' : undefined}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="hidden items-center gap-3 md:flex">
+          <a href="https://github.com/gotcli/got" target="_blank" rel="noreferrer" className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:border-slate-300">GitHub</a>
+          <a href="/docs/getting-started" className="rounded-xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">Get Started</a>
+        </div>
+
+        <button
+          className="rounded-lg border border-slate-200 p-2 text-slate-800 md:hidden"
+          onClick={() => setOpen(!open)}
+          aria-label="Toggle navigation"
+          aria-expanded={open}
+        >
+          {open ? <X size={18} /> : <Menu size={18} />}
+        </button>
+      </div>
+
+      {open && (
+        <nav className="border-t border-slate-200 bg-white/90 px-4 py-3 md:hidden">
+          {navLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              onClick={() => setOpen(false)}
+              className="block rounded-xl px-3 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              {link.label}
+            </a>
+          ))}
+          <a href="/docs/getting-started" className="mt-2 block rounded-xl bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white">Get Started</a>
+        </nav>
+      )}
+    </header>
+  )
 }

@@ -2,39 +2,118 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Check } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
-const workspaceCommand = [
-  'got init workspace \\',
-  '  --name business-platform \\',
-  '  --module example.com/business-platform \\',
-  '  --services account,payment,notification \\',
-  '  --db pg',
+const initCommand = [
+  '$ got init service',
+  '--name catalog-api',
+  '--module example.com/catalog-api',
+  '--architecture standard',
+  '--db pg',
 ]
 
-const workspaceFiles = ['account-service/', 'payment-service/', 'notification-service/', 'go.work', 'got-workspace.json', 'compose.yml', 'Makefile', 'README.md']
-
-function ServiceScene() {
-  return <motion.div key="service" initial={{opacity:0,x:-18}} animate={{opacity:1,x:0}} exit={{opacity:0,x:18}} transition={{duration:.35}} className="min-h-[315px]">
-    <p className="text-white"><span className="text-blue-400">$</span> got init service</p>
-    <p className="mt-5 text-slate-500">Creating your Go/Fiber service…</p>
-    <div className="mt-3 grid grid-cols-2 gap-x-5">{['Project structure','Go module','Database configuration','Route · Handler · Service','Repository','Structured logging','Health checks','Docker configuration'].map((item,i)=><motion.p key={item} initial={{opacity:0,x:-5}} animate={{opacity:1,x:0}} transition={{delay:.35+i*.09}} className="truncate leading-7 text-slate-300"><span className="text-blue-400">✓</span> {item}</motion.p>)}</div>
-    <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.2}} className="mt-6 border-t border-white/10 pt-4"><p className="font-semibold text-green-400">✓ Project created successfully</p><p className="mt-1 text-white">Your API is ready.<span className="ml-1 inline-block h-4 w-1.5 animate-pulse bg-blue-400 align-middle"/></p></motion.div>
-  </motion.div>
-}
-
-function WorkspaceScene() {
-  return <motion.div key="workspace" initial={{opacity:0,x:-18}} animate={{opacity:1,x:0}} exit={{opacity:0,x:18}} transition={{duration:.35}} className="min-h-[315px]">
-    <div className="space-y-1">{workspaceCommand.map((line,i)=><motion.p key={line} initial={{opacity:0,width:0}} animate={{opacity:1,width:'100%'}} transition={{delay:i*.18,duration:.35}} className={`overflow-hidden whitespace-nowrap ${i===0?'text-white':'text-cyan-200'}`}>{i===0&&<span className="mr-2 text-blue-400">$</span>}{line}</motion.p>)}</div>
-    <motion.p initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.05}} className="mt-5 text-slate-500">Creating multi-service workspace…</motion.p>
-    <div className="mt-3 grid grid-cols-2 gap-x-5">{workspaceFiles.map((file,i)=><motion.p key={file} initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} transition={{delay:1.15+i*.08}} className="truncate leading-7 text-slate-300"><span className="text-blue-400">{i<3?'├──':'✓'}</span> {file}</motion.p>)}</div>
-    <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1.9}} className="mt-4 flex items-center gap-2 border-t border-white/10 pt-4 font-semibold text-green-400"><Check size={15}/> Workspace created successfully</motion.div>
-  </motion.div>
-}
+const generatedChecks = [
+  'Project created',
+  'Fiber configured',
+  'PostgreSQL configured',
+  'Structured logging',
+  'Request ID',
+  'Docker ready',
+]
 
 export default function TerminalDemo() {
-  const [scene,setScene]=useState<'service'|'workspace'>('service')
-  useEffect(()=>{const timer=window.setInterval(()=>setScene(value=>value==='service'?'workspace':'service'),7000);return()=>window.clearInterval(timer)},[])
-  return <motion.div initial={{opacity:0,y:24}} animate={{opacity:1,y:0}} transition={{delay:.2,duration:.65}} className="terminal-shadow w-full overflow-hidden rounded-2xl border border-slate-700 bg-[#0b1426]">
-    <div className="flex items-center gap-2 border-b border-white/10 bg-[#111d32] px-4 py-3 sm:px-5"><i className="size-3 rounded-full bg-red-400"/><i className="size-3 rounded-full bg-amber-400"/><i className="size-3 rounded-full bg-green-400"/><span className="ml-2 hidden font-mono text-xs text-slate-500 sm:block">~/projects</span><div className="ml-auto flex rounded-lg bg-black/20 p-1 font-mono text-[9px] sm:text-[10px]">{(['service','workspace'] as const).map(item=><button key={item} onClick={()=>setScene(item)} className={`rounded-md px-2.5 py-1.5 capitalize transition ${scene===item?'bg-blue-500 text-white':'text-slate-500 hover:text-slate-300'}`}>{item}</button>)}</div></div>
-    <div className="p-5 font-mono text-[11px] sm:p-7 sm:text-sm"><AnimatePresence mode="wait">{scene==='service'?<ServiceScene/>:<WorkspaceScene/>}</AnimatePresence></div>
-  </motion.div>
+  const [scene, setScene] = useState<'service' | 'generated'>('service')
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setScene((current) => (current === 'service' ? 'generated' : 'service'))
+    }, 5500)
+
+    return () => window.clearInterval(timer)
+  }, [])
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="terminal-shadow w-full overflow-hidden rounded-[1.7rem] border border-slate-700 bg-[#0d1726]"
+    >
+      <div className="flex items-center gap-2 border-b border-white/10 bg-[#111d32] px-4 py-3 sm:px-5">
+        <span className="h-3 w-3 rounded-full bg-red-400" />
+        <span className="h-3 w-3 rounded-full bg-amber-400" />
+        <span className="h-3 w-3 rounded-full bg-emerald-400" />
+        <div className="ml-auto flex rounded-lg bg-black/20 p-1 font-mono text-[9px] uppercase tracking-[0.12em] text-slate-300 sm:text-[10px]">
+          <button
+            type="button"
+            onClick={() => setScene('service')}
+            className={`rounded-md px-2.5 py-1.5 ${scene === 'service' ? 'bg-sky-500 text-white' : 'text-slate-400'}`}
+          >
+            init
+          </button>
+          <button
+            type="button"
+            onClick={() => setScene('generated')}
+            className={`rounded-md px-2.5 py-1.5 ${scene === 'generated' ? 'bg-sky-500 text-white' : 'text-slate-400'}`}
+          >
+            output
+          </button>
+        </div>
+      </div>
+
+      <div className="p-5 font-mono text-[11px] sm:p-7 sm:text-sm">
+        <AnimatePresence mode="wait">
+          {scene === 'service' ? (
+            <motion.div key="service" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.3 }} className="min-h-[280px]">
+              <div className="space-y-1 text-slate-200">
+                {initCommand.map((line, index) => (
+                  <motion.p
+                    key={line}
+                    initial={{ opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className={index === 0 ? 'text-sky-300' : 'text-slate-200'}
+                  >
+                    {line}
+                  </motion.p>
+                ))}
+              </div>
+
+              <div className="mt-6 grid gap-2 sm:grid-cols-2">
+                {generatedChecks.map((item, index) => (
+                  <motion.p
+                    key={item}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 + index * 0.08 }}
+                    className="text-slate-300"
+                  >
+                    <span className="mr-2 text-emerald-400">✓</span>
+                    {item}
+                  </motion.p>
+                ))}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div key="generated" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.3 }} className="min-h-[280px]">
+              <p className="text-slate-200">project created</p>
+              <div className="mt-5 space-y-1 text-slate-300">
+                <p>catalog-api/</p>
+                <p>├── cmd/</p>
+                <p>├── internal/</p>
+                <p>├── pkg/</p>
+                <p>├── Dockerfile</p>
+                <p>├── go.mod</p>
+                <p>├── .env.example</p>
+                <p>└── Makefile</p>
+              </div>
+
+              <div className="mt-6 flex items-center gap-2 border-t border-white/10 pt-4 text-emerald-400">
+                <Check size={14} />
+                <span>Project created successfully</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.div>
+  )
 }

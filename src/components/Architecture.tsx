@@ -1,10 +1,37 @@
-import { ArrowDown } from 'lucide-react'
-import { motion } from 'framer-motion'
-import { layers } from '../data/got'
+import { ArrowRight } from 'lucide-react'
+import { architectureModes } from '../data/got'
 
 export default function Architecture() {
-  return <section id="architecture" className="bg-[#071426] py-24 text-white sm:py-32"><div className="mx-auto max-w-7xl px-5 lg:px-8"><div className="max-w-3xl"><p className="font-bold text-blue-400">CLEAR BY DESIGN</p><h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">A solid architecture for real projects.</h2><p className="mt-5 text-lg leading-8 text-slate-400">Each concern has a home. Follow a request from route to database without untangling a monolith.</p></div>
-    <div className="mt-14 grid gap-8 lg:grid-cols-[.85fr_1.15fr]"> <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8">{layers.map((l, i) => <div key={l.name}><motion.div initial={{ opacity: .45, scale: .98 }} whileInView={{ opacity: 1, scale: 1 }} whileHover={{ scale: 1.025, x: 4 }} viewport={{ once: true }} transition={{ delay: i * .08 }} className="cursor-default rounded-xl p-3 text-center font-bold text-ink shadow-sm" style={{background:l.color}}>{l.name}</motion.div>{i < layers.length - 1 && <div className="relative mx-auto my-1.5 h-5 w-5"><ArrowDown size={18} className="absolute text-blue-400"/><motion.span className="absolute left-[8px] top-0 size-1.5 rounded-full bg-white shadow-[0_0_8px_#fff]" animate={{y:[0,13,0],opacity:[0,1,0]}} transition={{duration:1.25,repeat:Infinity,delay:i*.16}}/></div>}</div>)}</div>
-    <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0c1b30] p-6 font-mono text-sm sm:p-8"><p className="mb-6 text-xs font-bold tracking-widest text-blue-400">GENERATED SERVICE</p><div className="space-y-2 text-slate-300"><p className="text-white">service/</p><p>├── <span className="text-blue-300">entity/</span></p><p>├── <span className="text-violet-300">repository/</span></p><p>├── <span className="text-emerald-300">service/</span></p><p>├── <span className="text-amber-300">handler/</span></p><p>├── <span className="text-rose-300">route/</span></p><p>├── Dockerfile</p><p>├── go.mod</p><p>└── main.go</p></div><p className="mt-8 border-t border-white/10 pt-6 font-sans leading-7 text-slate-400">The exact generated tree follows the architecture and options selected during setup.</p></div></div>
-  </div></section>
+  return (
+    <section id="architecture" className="relative py-24 sm:py-28">
+      <div className="mx-auto max-w-7xl px-5 lg:px-8">
+        <div className="max-w-2xl">
+          <p className="text-xs font-bold tracking-[0.18em] text-sky-700 uppercase">Architectures</p>
+          <h2 className="mt-4 text-4xl font-black tracking-[-0.06em] text-slate-950 sm:text-5xl">
+            Choose the shape of your Go service.
+          </h2>
+        </div>
+
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+          {architectureModes.map(({ title, command, text, icon: Icon }) => (
+            <article key={title} className="panel-surface rounded-[1.8rem] p-6">
+              <span className="grid h-12 w-12 place-items-center rounded-xl bg-sky-100 text-sky-700 ring-1 ring-sky-200">
+                <Icon size={20} />
+              </span>
+
+              <h3 className="mt-5 text-2xl font-black tracking-[-0.04em] text-slate-950">{title}</h3>
+              <code className="mt-5 block rounded-xl border border-slate-200 bg-slate-950 p-3 font-mono text-xs text-sky-300">
+                {command}
+              </code>
+              <p className="mt-5 text-base leading-7 text-slate-600">{text}</p>
+              <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-slate-900">
+                Explore
+                <ArrowRight size={16} />
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
 }

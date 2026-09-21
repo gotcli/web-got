@@ -1,13 +1,65 @@
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { ArrowRight, Check } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { techStack } from '../data/got'
 import HeroBackdrop from './HeroBackdrop'
 import TerminalDemo from './TerminalDemo'
 
 export default function Hero() {
-  return <main id="product" className="min-h-screen bg-[#050b17]"><div className="hero-stage relative flex min-h-[100svh] flex-col justify-center overflow-hidden bg-[#050b17] px-5 pb-14 pt-36 text-white sm:px-8 sm:pb-16 sm:pt-32"><div className="hero-grid absolute inset-0"/><div className="hero-aurora absolute inset-0"/><HeroBackdrop/>
-    <div className="relative mx-auto max-w-6xl text-center"><motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:.65}}><span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[.06] px-4 py-2 font-mono text-[10px] font-bold tracking-[.16em] text-cyan-200"><span className="size-1.5 animate-pulse rounded-full bg-cyan-300"/> GO APIS · WITHOUT THE REPETITIVE SETUP</span><h1 className="mx-auto mt-40 max-w-5xl text-[3.6rem] font-medium leading-[.95] tracking-[-.065em] sm:mt-44 sm:text-7xl lg:text-[6.6rem]">From schema to API.<br/><span className="brand-gradient">One command away.</span></h1><p className="mx-auto mt-7 max-w-2xl text-base leading-7 text-slate-400 sm:text-lg">Generate a structured Go/Fiber foundation with the layers your API needs—then focus on the business logic that makes it yours.</p><div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row"><a href="#docs" className="group inline-flex items-center justify-center gap-4 rounded-2xl bg-white px-7 py-4 font-bold text-slate-950 transition hover:scale-[.98]">Generate your first API <ArrowRight size={18} className="transition group-hover:translate-x-1"/></a><a href="#cli" className="rounded-2xl border border-white/15 bg-white/[.06] px-7 py-4 font-bold text-white backdrop-blur transition hover:scale-[.98] hover:bg-white/10">See how GOT works</a></div></motion.div>
-      <motion.div initial={{opacity:0,y:50,rotateX:8,scale:.96}} animate={{opacity:1,y:[0,-7,0],rotateX:[0,1.2,0],scale:1}} transition={{opacity:{delay:.35,duration:.9},scale:{delay:.35,duration:.9},y:{delay:1.25,duration:5.5,repeat:Infinity,ease:'easeInOut'},rotateX:{delay:1.25,duration:5.5,repeat:Infinity,ease:'easeInOut'}}} whileHover={{scale:1.012,transition:{duration:.25}}} style={{transformPerspective:1200}} className="relative mx-auto mt-20 max-w-5xl text-left"><motion.div animate={{opacity:[.45,.8,.45],scale:[.96,1.03,.96]}} transition={{duration:4.5,repeat:Infinity,ease:'easeInOut'}} className="absolute -inset-8 -z-10 bg-blue-500/30 blur-[70px]"/><TerminalDemo/></motion.div>
-      <div className="mt-9 flex flex-wrap justify-center gap-x-8 gap-y-3">{['Fast', 'Production Ready', 'General Purpose', 'Developer Friendly'].map(x=><span key={x} className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-slate-500"><CheckCircle2 size={13} className="text-cyan-400"/>{x}</span>)}</div>
-    </div><a href="#features" className="absolute bottom-7 left-8 hidden items-center gap-3 font-mono text-[10px] uppercase tracking-[.2em] text-slate-500 transition hover:text-white sm:flex"><span className="grid h-10 w-6 place-items-start rounded-full border border-white/20 p-1"><motion.i animate={{y:[0,16,0],opacity:[0,1,0]}} transition={{duration:1.8,repeat:Infinity}} className="mx-auto block size-1 rounded-full bg-cyan-300"/></span> Scroll to explore</a>
-  </div></main>
+  return (
+    <header id="top" className="hero-shell hero-stage relative overflow-hidden border-b border-white/10 pt-28 pb-18 text-white sm:pt-32">
+      <div className="hero-grid absolute inset-0" aria-hidden="true" />
+      <div className="hero-aurora absolute inset-0" aria-hidden="true" />
+      <HeroBackdrop />
+
+      <div className="relative mx-auto max-w-6xl px-5 pb-10 text-center sm:px-8 lg:px-8">
+        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-bold tracking-[0.2em] text-sky-200 uppercase shadow-sm backdrop-blur-sm">
+            <span className="h-2 w-2 rounded-full bg-sky-400" />
+            Go API generation
+          </span>
+
+          <h1 className="mx-auto mt-8 max-w-5xl text-balance text-[3.2rem] font-black leading-[0.94] tracking-[-0.08em] text-white sm:text-6xl lg:text-[7rem]">
+            <span className="mt-2 block text-slate-300">Build Go APIs.</span>
+            <span className="mt-2 block text-white">Own the Code.</span>
+          </h1>
+
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-slate-300 sm:text-xl">
+            A production-focused CLI and source generator for Go + Fiber applications.
+          </p>
+
+          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <a href="/docs/getting-started" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-semibold text-slate-950 shadow-[0_18px_30px_rgba(15,23,42,0.18)] hover:-translate-y-0.5 hover:bg-sky-50">
+              Get Started
+              <ArrowRight size={18} />
+            </a>
+            <a href="https://github.com/gotcli/got" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white hover:border-white/25 hover:bg-white/10">
+              GitHub
+            </a>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 36 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.15 }}
+          className="relative mx-auto mt-12 max-w-5xl text-left"
+        >
+          <div className="absolute -inset-6 -z-10 rounded-[2rem] bg-sky-500/15 blur-3xl" />
+          <TerminalDemo />
+        </motion.div>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          {techStack.map((item) => (
+            <span
+              key={item}
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur-sm"
+            >
+              <Check size={12} className="text-sky-300" />
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+    </header>
+  )
 }
