@@ -45,6 +45,8 @@ jobs:
     needs: validate
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
+    environment:
+      name: production
 
     steps:
       - name: Checkout
@@ -95,9 +97,17 @@ jobs:
         env:
           DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
 
+      - name: Verify SSH key and remote access
+        run: |
+          ssh-add -l
+          ssh -T -o BatchMode=yes -o IdentitiesOnly=no "$DEPLOY_USER@$DEPLOY_HOST" 'id && docker version --format "{{.Server.Version}}"'
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+
       - name: Pull and restart Docker container
         run: |
-          ssh "$DEPLOY_USER@$DEPLOY_HOST" <<EOF
+          ssh -T -o BatchMode=yes -o IdentitiesOnly=no "$DEPLOY_USER@$DEPLOY_HOST" <<EOF
           set -e
           docker pull "$IMAGE_NAME:$IMAGE_TAG"
           docker stop got-web 2>/dev/null || true
