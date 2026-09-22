@@ -16,11 +16,10 @@ import {
 export type NavLink = { label: string; href: string; target?: string }
 
 export const navLinks: NavLink[] = [
-  { label: 'Landing', href: '/' },
   { label: 'Docs', href: '/docs' },
+  { label: 'CLI', href: '#cli' },
+  { label: 'Architecture', href: '#architecture' },
   { label: 'Community', href: '/community' },
-  { label: 'Roadmap', href: '/roadmap' },
-  { label: 'Changelog', href: '/changelog' },
   { label: 'GitHub', href: 'https://github.com/gotcli/got', target: '_blank' },
 ]
 
@@ -29,22 +28,32 @@ export const techStack = ['Go 1.25', 'Fiber', 'Viper', 'GORM']
 export const generateCards = [
   {
     title: 'got init',
-    command: 'got init service --architecture standard',
-    description: 'Create a clean Go + Fiber project with the structure you need to build from day one.',
+    command: 'got init service --name catalog-api --module example.com/catalog-api --architecture microservice --db pg',
+    description: 'Create one standard API or independently deployable microservice with a Go module and configuration.',
   },
   {
     title: 'got api',
     command: 'got api --name users',
-    description: 'Generate the API layers you expect: entity, repository, service, handler, and routes.',
+    description: 'Generate entity, schema, repository, service, handler, and route files without overwriting existing files.',
   },
   {
     title: 'got generate crud',
     command: 'got generate crud',
-    description: 'Generate the boring CRUD foundation so you can focus on the business logic.',
+    description: 'Inspect an existing PostgreSQL or SQL Server schema and generate executable CRUD layers.',
   },
 ]
 
-export const sourceLayers = ['Entity', 'Repository', 'Service', 'Handler', 'Routes']
+export const sourceLayers = ['Entity', 'Schema', 'Repository', 'Service', 'Handler', 'Route']
+
+export const generatedTree = [
+  'users/',
+  '├── entity/',
+  '├── schema/',
+  '├── repository/',
+  '├── service/',
+  '├── handler/',
+  '└── route/',
+]
 
 export const authCapabilities = [
   'Access token',
@@ -62,16 +71,20 @@ export const productionFeatures = [
   'Structured JSON logging',
   'Request ID',
   'Context propagation',
+  'HTTP, service, and database logs',
   'Secret redaction',
   'Bounded result logging',
   'HTTP request body limits',
+]
+
+export const microserviceFeatures = [
   'Graceful shutdown',
-  'HTTP timeouts',
-  'Liveness endpoint',
-  'Readiness endpoint',
+  'HTTP read, write, and idle timeouts',
+  'GET /health/live',
+  'GET /health/ready',
   'Database readiness',
-  'Multi-stage Docker build',
-  'Distroless runtime',
+  'Multi-stage Dockerfile',
+  'Distroless runtime image',
 ]
 
 export const doctorChecks = [
@@ -97,10 +110,16 @@ export const featureCards: { icon: LucideIcon; title: string; text: string }[] =
 ]
 
 export const commands = [
-  { name: 'Service', command: 'got init service --architecture standard', text: 'Create a Go + Fiber service with a clean baseline architecture.' },
+  { name: 'Service', command: 'got init service --architecture standard', text: 'Create one standard API or microservice project.' },
+  { name: 'Workspace', command: 'got init workspace --services account,payment,notification', text: 'Create a multi-service workspace with independent Go modules.' },
   { name: 'API', command: 'got api --name users', text: 'Generate entity, repository, service, handler, and routes for a feature.' },
-  { name: 'Method', command: 'got add method --folder orders --name Approve --http-method PATCH --path /:id/approve', text: 'Modify the relevant source layers in an existing service without a wholesale rewrite.' },
-  { name: 'Doctor', command: 'got doctor --project --connect', text: 'Verify project health, dependencies, configuration, and database readiness.' },
+  { name: 'Method', command: 'got add method --folder orders --name Approve --http-method PATCH --path /:id/approve', text: 'Use Go syntax trees to update repository, service, handler, and route layers.' },
+  { name: 'Auth', command: 'got add auth --jwt', text: 'Add JWT access and refresh token management with Fiber bearer middleware.' },
+  { name: 'Upload', command: 'got add upload', text: 'Add a secure multipart upload endpoint.' },
+  { name: 'Swagger', command: 'got add swagger', text: 'Add OpenAPI 3.0 and Swagger UI routes.' },
+  { name: 'Doctor', command: 'got doctor --project --connect', text: 'Check project files, configuration, connectivity, and readiness.' },
+  { name: 'Version', command: 'got version', text: 'Print the installed GOT version.' },
+  { name: 'Completion', command: 'got completion zsh', text: 'Generate shell completion for zsh, bash, or fish.' },
 ]
 
 export const architectureModes = [

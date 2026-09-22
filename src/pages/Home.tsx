@@ -8,19 +8,19 @@ import Footer from '../components/Footer'
 import Hero from '../components/Hero'
 import HowItWorks from '../components/HowItWorks'
 import Navbar from '../components/Navbar'
-import ProjectGenerator from '../components/ProjectGenerator'
+import ProjectTypes from '../components/ProjectTypes'
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen bg-[#f7f3ee] text-slate-800">
+    <div className="relative min-h-screen bg-[#f8fafc] text-slate-800">
       <Navbar />
       <Hero />
       <main>
         <Features />
-        <ProjectGenerator />
         <DatabaseToAPI />
         <HowItWorks />
         <Architecture />
+        <ProjectTypes />
         <CLIShowcase />
         <FinalCTA />
       </main>

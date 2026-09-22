@@ -1,9 +1,10 @@
 import { CheckCircle2, Clipboard, Sparkles } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { doctorChecks } from '../data/got'
+import { commands, doctorChecks } from '../data/got'
 
 export default function CLIShowcase() {
   const [active, setActive] = useState(0)
+  const [commandIndex, setCommandIndex] = useState(0)
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
@@ -21,16 +22,16 @@ export default function CLIShowcase() {
   }
 
   return (
-    <section id="community" className="bg-[#f3efe9] py-24 sm:py-28">
+    <section id="cli" className="bg-[#eef3f8] py-24 sm:py-28">
       <div className="mx-auto max-w-5xl px-5 lg:px-8">
         <div className="text-center">
-          <p className="text-xs font-bold tracking-[0.18em] text-sky-700 uppercase">GOT doctor</p>
+          <p className="font-mono text-xs font-bold tracking-[0.18em] text-sky-700 uppercase">06 / Diagnose · 10 / Reference</p>
           <h2 className="mt-4 text-4xl font-black tracking-[-0.06em] text-slate-950 sm:text-5xl">
-            Everything looks good.
+            Know before you ship.
           </h2>
         </div>
 
-        <div className="mt-12 overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_20px_40px_rgba(15,23,42,0.04)]">
+        <div className="mt-12 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_20px_40px_rgba(15,23,42,0.04)]">
           <div className="flex items-center gap-2 border-b border-slate-200 bg-slate-50 px-4 py-3">
             <span className="h-3 w-3 rounded-full bg-red-400" />
             <span className="h-3 w-3 rounded-full bg-amber-400" />
@@ -65,6 +66,11 @@ export default function CLIShowcase() {
                   {index <= active ? <CheckCircle2 size={16} /> : <span className="h-2.5 w-2.5 rounded-full bg-slate-300" />}
                 </div>
               ))}
+            </div>
+            <div className="mt-8 border-t border-slate-200 pt-8">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-slate-500">CLI reference</p>
+              <div className="mt-4 flex flex-wrap gap-2">{commands.map(({ name }, index) => <button key={name} type="button" onClick={() => setCommandIndex(index)} className={`rounded-md border px-3 py-2 text-xs font-semibold ${index === commandIndex ? 'border-sky-500 bg-sky-50 text-sky-700' : 'border-slate-200 text-slate-600 hover:border-slate-300'}`}>{name}</button>)}</div>
+              <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center"><code className="overflow-x-auto rounded-lg bg-slate-950 p-4 font-mono text-xs text-sky-300">$ {commands[commandIndex].command}</code><p className="text-sm text-slate-600">{commands[commandIndex].text}</p></div>
             </div>
           </div>
         </div>
