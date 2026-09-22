@@ -40,17 +40,40 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+  publish:
+    name: Publish Docker image
+    needs: validate
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          name: got-web-dist
-          path: dist
-          if-no-files-found: error
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/got-web:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/got-web:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   deploy:
     name: Deploy production
-    needs: validate
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: publish
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment:
       name: production
@@ -59,12 +82,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: got-web-dist
-          path: dist
 
       - name: Setup SSH agent
         uses: webfactory/ssh-agent@v0.9.0
@@ -78,23 +95,27 @@ jobs:
         env:
           DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
 
-      - name: Prepare remote directory
-        run: ssh "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -p '$DEPLOY_PATH'"
+      - name: Pull and restart Docker container
+        run: |
+          ssh "$DEPLOY_USER@$DEPLOY_HOST" <<EOF
+          set -e
+          docker pull "$IMAGE_NAME:$IMAGE_TAG"
+          docker stop got-web 2>/dev/null || true
+          docker rm got-web 2>/dev/null || true
+          docker run -d \\
+            --name got-web \\
+            --restart unless-stopped \\
+            --publish 80:80 \\
+            "$IMAGE_NAME:$IMAGE_TAG"
+          EOF
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/got-web
+          IMAGE_TAG: ${{ github.sha }}
 
-      - name: Sync static site over SSH
-        run: rsync -az --delete dist/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+      - name: Verify running container
+        run: ssh "$DEPLOY_USER@$DEPLOY_HOST" "docker ps --filter name=got-web --filter status=running --format '{{.Names}}' | grep -Fx got-web"
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-
-      - name: Verify deployed index
-        run: ssh "$DEPLOY_USER@$DEPLOY_HOST" "test -s '$DEPLOY_PATH/index.html'"
-        env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
